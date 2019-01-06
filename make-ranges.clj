@@ -33,20 +33,21 @@
 (comment (fold [1 2 3 8 9 13 30]))
 
 
-(defn to-hex [s]
+(defn parse-hex [s]
   (Integer/parseInt s 16))
 
 
 (defn extract-num [s]
-  (->> (re-find #"0x([0-9a-fA-F]{4})" s)
+  (some->> (re-find #"0x([0-9a-fA-F]{4})" s)
        last
-       to-hex))
+       parse-hex))
 
 (comment (extract-num "hello 0x0010 world"))
 
 
 (defn process [lines]
   (->> (mapv extract-num lines)
+       (filter some?)
        sort
        fold))
 
